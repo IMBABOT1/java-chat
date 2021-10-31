@@ -20,7 +20,7 @@ public class MainApp {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             while (true){
                 String msg = is.readUTF();
-                System.out.println("client: " + msg);
+                System.out.println("client: " + msg + '\n');
                 out.writeUTF("echo: " + msg);
             }
         }catch (IOException e){
