@@ -1,5 +1,6 @@
 package ru.geekbrains.chat.client;
 
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,6 +19,13 @@ public class Network {
 
     public void sendMsg(String msg) throws IOException {
         out.writeUTF(msg);
+    }
+
+    public boolean isConnected() {
+        if (socket == null || socket.isClosed()) {
+            return false;
+        }
+        return true;
     }
 
     public String readMsg() throws IOException {

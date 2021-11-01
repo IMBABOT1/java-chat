@@ -1,5 +1,6 @@
 package ru.geekbrains.chat.server;
 
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class ClientHandler {
     public String getNickname() {
         return nickname;
     }
+
 
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
@@ -35,9 +37,8 @@ public class ClientHandler {
                                 continue;
                             }
                             nickname = nickFromAuthManager;
-                            server.subscribe(this);
-                            server.broadcastMsg(nickname + " " + "зашел в чат");
                             sendMsg("/authok " + nickname);
+                            server.subscribe(this);
                             break;
                         } else {
                             sendMsg("Указан неверный логин/пароль");
@@ -48,21 +49,17 @@ public class ClientHandler {
                     String msg = in.readUTF();
                     System.out.print("Сообщение от клиента: " + msg + "\n");
                     if (msg.startsWith("/")) {
-                        String[] tokens = msg.split(" ", 3);
-
-                        if (tokens[0].equals("/w")){
-                            server.unicastMsg(this, tokens[1], tokens[2]);
+                        if (msg.startsWith("/w ")) {
+                            String[] tokens = msg.split(" ", 3); // /w user2 hello, user2
+                            server.sendPrivateMsg(this, tokens[1], tokens[2]);
+                            continue;
                         }
-
                         if (msg.equals("/end")) {
                             sendMsg("/end_confirm");
-                            server.broadcastMsg(this.getNickname() + " " + "вышел из чата");
                             break;
                         }
-
-
                     } else {
-                        server.broadcastMsg(nickname + ": " + msg);
+                        server.broadcastMsg(nickname + ": " + msg, true);
                     }
                 }
             } catch (IOException e) {
