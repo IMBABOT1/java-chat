@@ -11,10 +11,16 @@ public class ClientHandler {
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
+
+
     private String nickname;
 
     public String getNickname() {
         return nickname;
+    }
+
+    public void setNickname(String nick){
+        this.nickname = nick;
     }
 
 
@@ -58,6 +64,13 @@ public class ClientHandler {
                             sendMsg("/end_confirm");
                             break;
                         }
+
+                        if (msg.startsWith("/change_nick ")){
+                            String[] tokens = msg.split(" ",2);
+                            server.changeNick(this.nickname, tokens[1]);
+                            System.out.println(this.getNickname());
+                        }
+
                     } else {
                         server.broadcastMsg(nickname + ": " + msg, true);
                     }
