@@ -36,6 +36,7 @@ public class ClientHandler {
                             }
                             nickname = nickFromAuthManager;
                             server.subscribe(this);
+                            server.broadcastMsg(nickname + " " + "зашел в чат");
                             sendMsg("/authok " + nickname);
                             break;
                         } else {
@@ -55,6 +56,7 @@ public class ClientHandler {
 
                         if (msg.equals("/end")) {
                             sendMsg("/end_confirm");
+                            server.broadcastMsg(this.getNickname() + " " + "вышел из чата");
                             break;
                         }
 
