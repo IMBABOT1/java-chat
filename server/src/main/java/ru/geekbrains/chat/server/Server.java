@@ -42,6 +42,22 @@ public class Server {
         }
     }
 
+    public void changeNick(String old, String newNick){
+        for (ClientHandler o : clients){
+            if (o.getNickname().equals(old)){
+                o.setNickname(newNick);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder("/change_list ");
+
+        for (ClientHandler o: clients){
+            stringBuilder.append(o.getNickname()).append(" ");
+        }
+        stringBuilder.setLength(stringBuilder.length() - 1);
+        String out = stringBuilder.toString();
+        broadcastMsg(out, false);
+    }
+
     public void broadcastClientsList() {
         StringBuilder stringBuilder = new StringBuilder("/clients_list ");
         for (ClientHandler o : clients) {
@@ -67,13 +83,6 @@ public class Server {
         sender.sendMsg(receiverNickname + " не в сети");
     }
 
-    public void changeNick(String old, String newNick){
-        for (ClientHandler o : clients){
-            if (o.getNickname().equals(old)){
-                o.setNickname(newNick);
-            }
-        }
-    }
 
     public boolean isNickBusy(String nickname) {
         for (ClientHandler o : clients) {

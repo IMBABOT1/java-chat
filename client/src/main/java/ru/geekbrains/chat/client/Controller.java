@@ -93,6 +93,17 @@ public class Controller implements Initializable {
                                     }
                                 });
                             }
+                            if (msg.startsWith("/change_list ")) { // '/clients_list user1 user2 user3'
+                                Platform.runLater(() -> {
+                                    clientsList.getItems().clear();
+                                    String[] tokens = msg.split(" ");
+                                    for (int i = 1; i < tokens.length; i++) {
+                                        if (!nickname.equals(tokens[i])) {
+                                            clientsList.getItems().add(tokens[i]);
+                                        }
+                                    }
+                                });
+                            }
                         } else {
                             textArea.appendText(msg + "\n");
                         }
