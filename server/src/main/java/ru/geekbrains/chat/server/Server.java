@@ -35,6 +35,15 @@ public class Server {
         }
     }
 
+    public void unicastMsg(ClientHandler sander, String receiver, String msg){
+        for (ClientHandler o : clients){
+            if (o.getNickname().equals(receiver)){
+                System.out.println(o.getNickname());
+                o.sendMsg(sander.getNickname() + " " + "whisper: " + msg);
+            }
+        }
+    }
+
     public boolean isNickBusy(String nickname) {
         for (ClientHandler o : clients) {
             if (o.getNickname().equals(nickname)) {

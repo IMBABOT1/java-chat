@@ -47,10 +47,18 @@ public class ClientHandler {
                     String msg = in.readUTF();
                     System.out.print("Сообщение от клиента: " + msg + "\n");
                     if (msg.startsWith("/")) {
+                        String[] tokens = msg.split(" ", 3);
+
+                        if (tokens[0].equals("/w")){
+                            server.unicastMsg(this, tokens[1], tokens[2]);
+                        }
+
                         if (msg.equals("/end")) {
                             sendMsg("/end_confirm");
                             break;
                         }
+
+
                     } else {
                         server.broadcastMsg(nickname + ": " + msg);
                     }
