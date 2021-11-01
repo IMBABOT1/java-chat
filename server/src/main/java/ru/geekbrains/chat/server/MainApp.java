@@ -20,6 +20,15 @@ public class MainApp {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             while (true){
                 String msg = is.readUTF();
+                if (msg.equals("/end")){
+                    out.writeUTF("/end_confirm");
+                    is.close();
+                    out.close();
+                    socket.close();
+                    serverSocket.close();
+                    System.out.println("Client disconnected server is stopped");
+                    break;
+                }
                 System.out.println("client: " + msg + '\n');
                 out.writeUTF("echo: " + msg);
             }

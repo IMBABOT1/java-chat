@@ -2,6 +2,7 @@ package ru.geekbrains.chat.client;
 
 
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,10 +37,15 @@ public class Controller implements Initializable {
                     while (true) {
                         String msg = network.readMsg();
                         mainArea.appendText(msg + "\n");
+                        if (msg.equals("/end_confirm")){
+                            network.close();
+                        }
                     }
                 }catch (IOException e){
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Connection with server lost");
-                    alert.showAndWait();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING, "Connection with server lost");
+                        alert.showAndWait();
+                    });
                 }finally {
                     network.close();
                 }
