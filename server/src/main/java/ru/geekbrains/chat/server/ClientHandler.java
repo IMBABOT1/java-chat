@@ -5,12 +5,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientHandler {
     private Server server;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
+    private ExecutorService service;
 
 
     private String nickname;
@@ -29,7 +32,9 @@ public class ClientHandler {
         this.socket = socket;
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
-        new Thread(() -> {
+        this.service = Executors.newFixedThreadPool(4);
+
+        service.execute(() -> {
             try {
                 while (true) { // цикл аутентификации
                     String msg = in.readUTF();
@@ -80,7 +85,9 @@ public class ClientHandler {
             } finally {
                 close();
             }
-        }).start();
+        });
+
+        service.shutdown();
     }
 
     public void sendMsg(String msg) {

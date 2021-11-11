@@ -2,6 +2,7 @@ package ru.geekbrains.chat.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,17 +11,23 @@ import java.util.Date;
 import java.util.List;
 
 public class Server {
-    private AuthManager authManager;
+    private SqlAuthManager sqlAuthManager;
     private List<ClientHandler> clients;
     private final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public AuthManager getAuthManager() {
-        return authManager;
+        return sqlAuthManager;
     }
 
     public Server(int port) {
         clients = new ArrayList<>();
-        authManager = new BasicAuthManager();
+        sqlAuthManager = new SqlAuthManager();
+        try {
+            sqlAuthManager.connect();
+        }catch (ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }
+
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Сервер запущен. Ожидаем подключения клиентов...");
             while (true) {
